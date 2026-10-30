@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ScamOrNot — Paste it. Check it. Before you pay, send, or click.</title>
+<meta name="description" content="Free instant scam check for any suspicious message, link, job offer, investment pitch or wallet address. Plain-English red flags in seconds. No sign-up. Nothing you paste leaves your browser.">
+<meta property="og:title" content="ScamOrNot — is it a scam? Check in seconds.">
+<meta property="og:description" content="Paste the message, link or address. Get the red flags in plain English before you pay, send or click.">
+<meta property="og:type" content="website">
+<style>
+  :root{--bg:#0b0e14;--card:#12161f;--card2:#171c28;--line:#232a3a;--text:#e8ecf4;--mut:#9aa6bb;--green:#46a758;--amber:#ffb224;--orange:#f76b15;--red:#e5484d;--accent:#5b8cff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Arial,sans-serif;line-height:1.55}
+  a{color:var(--accent)}
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px}
+  header{padding:20px 0 6px;display:flex;justify-content:space-between;align-items:center}
+  .logo{font-weight:800;font-size:22px;letter-spacing:-.5px}
+  .logo span{color:var(--red)}
+  .logo small{display:block;font-size:11px;color:var(--mut);font-weight:500;letter-spacing:.4px}
+  .badge{font-size:12px;color:var(--mut);border:1px solid var(--line);padding:5px 10px;border-radius:99px}
+  .hero{text-align:center;padding:34px 0 8px}
+  .hero h1{font-size:clamp(28px,5.4vw,44px);line-height:1.12;letter-spacing:-1px}
+  .hero h1 em{font-style:normal;color:var(--amber)}
+  .hero p{color:var(--mut);max-width:620px;margin:14px auto 0;font-size:16px}
+  .stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 4px}
+  .stats div{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:8px 14px;font-size:13px;color:var(--mut)}
+  .stats b{color:var(--text)}
+  .checker{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;margin:22px 0}
+  .tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+  .tab{flex:1;min-width:110px;background:var(--card2);color:var(--mut);border:1px solid var(--line);border-radius:11px;padding:11px;font-size:15px;font-weight:600;cursor:pointer}
+  .tab.on{color:#fff;border-color:var(--accent);background:#1a2338}
+  textarea,input[type=text]{width:100%;background:#0d1017;border:1px solid var(--line);border-radius:12px;color:var(--text);font-size:15px;padding:14px;font-family:inherit}
+  textarea{min-height:132px;resize:vertical}
+  textarea:focus,input:focus{outline:none;border-color:var(--accent)}
+  .row{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+  .go{flex:1;min-width:180px;background:var(--red);color:#fff;border:0;border-radius:12px;padding:15px;font-size:17px;font-weight:700;cursor:pointer}
+  .go:hover{filter:brightness(1.1)}
+  .examples{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .ex{background:transparent;border:1px dashed var(--line);color:var(--mut);border-radius:99px;padding:6px 12px;font-size:12.5px;cursor:pointer}
+  .ex:hover{color:var(--text);border-color:var(--accent)}
+  .privacy{font-size:12.5px;color:var(--mut);margin-top:10px}
+  .limit{font-size:13px;color:var(--amber);margin-top:10px;display:none}
+  #result{display:none;margin-top:20px;border-top:1px solid var(--line);padding-top:20px}
+  .verdict{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  .dial{width:104px;height:104px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0d1017;flex:none}
+  .dial b{font-size:34px;line-height:1}
+  .dial small{color:var(--mut);font-size:11px}
+  .vlabel{font-size:22px;font-weight:800;letter-spacing:-.3px}
+  .vsub{color:var(--mut);font-size:14px;max-width:480px}
+  h3.sec{font-size:15px;text-transform:uppercase;letter-spacing:.8px;color:var(--mut);margin:22px 0 10px}
+  .flag{background:var(--card2);border:1px solid var(--line);border-left:4px solid var(--amber);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+  .flag.red{border-left-color:var(--red)} .flag.info{border-left-color:var(--accent)}
+  .flag b{font-size:15px}
+  .flag .w{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:99px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+  .flag p{color:var(--mut);font-size:14px;margin-top:4px}
+  .flag .ex2{font-size:12.5px;color:#c8d2e4;background:#0d1017;border-radius:8px;padding:6px 9px;margin-top:7px;word-break:break-word}
+  ul.adv,ul.safe{list-style:none}
+  ul.adv li,ul.safe li{padding:8px 12px;border-radius:10px;margin-bottom:8px;font-size:14.5px}
+  ul.adv li{background:#1c1410;border:1px solid #3a2415}
+  ul.safe li{background:#0f1a12;border:1px solid #1d3323;color:#bfe3c8}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .btn2{background:var(--card2);border:1px solid var(--line);color:var(--text);border-radius:11px;padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer}
+  .how{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:8px 0 4px}
+  .how div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+  .how b{display:block;margin-bottom:5px}
+  .how p{color:var(--mut);font-size:14px}
+  .price{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:8px 0}
+  .plan{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .plan.pro{border-color:var(--accent)}
+  .plan h4{font-size:17px} .plan .amt{font-size:28px;font-weight:800;margin:6px 0}
+  .plan ul{list-style:none;color:var(--mut);font-size:14px}
+  .plan li{padding:3px 0}
+  .paybox{background:#0d1017;border:1px dashed var(--line);border-radius:12px;padding:12px;font-size:13.5px;color:var(--mut);margin-top:12px;word-break:break-all}
+  .paybox b{color:var(--text)}
+  details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:13px 16px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:600}
+  details p{color:var(--mut);font-size:14.5px;margin-top:7px}
+  .disc{font-size:13px;color:var(--mut);border:1px solid var(--line);border-radius:12px;padding:14px;margin:20px 0;background:var(--card)}
+  footer{padding:22px 0 40px;color:var(--mut);font-size:13.5px;text-align:center}
+  .unlock{display:none;margin-top:12px;gap:8px}
+  .unlock input{flex:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">Scam<span>Or</span>Not<small>PASTE IT. CHECK IT. BEFORE YOU PAY, SEND, OR CLICK.</small></div>
+    <div class="badge">Free · No sign-up · Private</div>
+  </header>
+
+  <section class="hero">
+    <h1>Every day, ordinary people lose money to messages that <em>felt almost right.</em></h1>
+    <p>Got a message, job offer, investment pitch, delivery text or link that feels off? Paste it here. ScamOrNot reads it the way a fraud analyst would — and shows you the red flags in plain English, in seconds.</p>
+    <div class="stats">
+      <div><b>$1 trillion+</b> lost to scams globally each year</div>
+      <div><b>15</b> fraud-pattern families checked</div>
+      <div><b>0</b> data stored — checks run in your browser</div>
+    </div>
+  </section>
+
+  <section class="checker" id="checker">
+    <div class="tabs">
+      <button class="tab on" data-mode="message">💬 A message</button>
+      <button class="tab" data-mode="link">🔗 A link</button>
+      <button class="tab" data-mode="address">👛 A wallet address</button>
+    </div>
+    <textarea id="input" placeholder="Paste the suspicious message here — a WhatsApp chat, email, SMS, job offer, investment pitch, anything. The more of it you paste, the better the check."></textarea>
+    <div class="row">
+      <button class="go" id="go">Check it now</button>
+    </div>
+    <div class="examples">
+      <span style="font-size:12.5px;color:var(--mut)">Try an example:</span>
+      <button class="ex" data-ex="pig">Friendly "trading mentor"</button>
+      <button class="ex" data-ex="fee">Prize with a fee</button>
+      <button class="ex" data-ex="parcel">Parcel held text</button>
+      <button class="ex" data-ex="phish">Fake bank link</button>
+      <button class="ex" data-ex="normal">A normal message</button>
+    </div>
+    <p class="privacy">🔒 Private by design: the analysis runs entirely in your browser. What you paste is never uploaded or stored.</p>
+    <p class="limit" id="limitNote"></p>
+    <div class="unlock" id="unlockRow">
+      <input type="text" id="proCode" placeholder="Pro access code">
+      <button class="btn2" id="unlockBtn">Unlock Pro</button>
+    </div>
+
+    <div id="result">
+      <div class="verdict">
+        <div class="dial" id="dial"><b id="scoreNum">0</b><small>RISK / 100</small></div>
+        <div>
+          <div class="vlabel" id="verdictLabel"></div>
+          <div class="vsub" id="verdictSub"></div>
+        </div>
+      </div>
+      <h3 class="sec" id="flagsTitle">What was found</h3>
+      <div id="flags"></div>
+      <div id="adviceWrap"><h3 class="sec">What to do</h3><ul class="adv" id="advice"></ul></div>
+      <div id="safeWrap"><h3 class="sec">Reassuring signs</h3><ul class="safe" id="safe"></ul></div>
+      <div class="actions">
+        <button class="btn2" id="copyBtn">📋 Copy result summary</button>
+        <button class="btn2" id="againBtn">Check another</button>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="sec">How it works</h3>
+  <div class="how">
+    <div><b>1 · Paste anything</b><p>A chat, an email, a job ad, a delivery text, a link, a wallet address — whatever made you pause.</p></div>
+    <div><b>2 · Get the red flags</b><p>Your text is checked against the patterns behind advance-fee fraud, pig-butchering, phishing, fake jobs, parcel scams and more — each flag explained in plain words.</p></div>
+    <div><b>3 · Decide with a clear head</b><p>Pressure is the scammer's main tool. A 30-second check takes it away. When in doubt, verify through the official app or number — never through the message itself.</p></div>
+  </div>
+
+  <h3 class="sec">Pricing</h3>
+  <div class="price">
+    <div class="plan">
+      <h4>Free</h4><div class="amt">$0</div>
+      <ul><li>3 checks every day</li><li>Full red-flag breakdown</li><li>Message, link &amp; address checks</li><li>No account, no tracking</li></ul>
+    </div>
+    <div class="plan pro">
+      <h4>Pro</h4><div class="amt">$9<span style="font-size:14px;color:var(--mut)"> /month</span></div>
+      <ul><li>Unlimited checks</li><li>Full red-flag breakdown</li><li>Priority pattern updates as new scams spread</li><li>For people who screen offers, gigs and deals daily</li></ul>
+      <div class="paybox">
+        Pay with <b>USDC on Base</b> to:<br><b>0x48E78fFC3f02A65c6A9718b4dc293ae14cBb7985</b><br><br>
+        Then send your transaction hash to our Telegram assistant <b>@NenzyBrownAssistantBot</b> (send /order) or by email to <b>njakoiemmanuel10@gmail.com</b> — your Pro code arrives within 24 hours, usually much faster.
+      </div>
+    </div>
+    <div class="plan">
+      <h4>Teams &amp; Communities</h4><div class="amt">$29<span style="font-size:14px;color:var(--mut)"> /month</span></div>
+      <ul><li>Everything in Pro</li><li>Codes for up to 10 members</li><li>For trading groups, freelancer communities and family groups that forward each other offers</li></ul>
+    </div>
+  </div>
+
+  <h3 class="sec">Questions</h3>
+  <details><summary>Is ScamOrNot a guarantee?</summary><p>No — and beware any tool that promises one. ScamOrNot checks for the known patterns real fraud runs on and explains what it finds. A clean result means no strong patterns were detected, not that something is certainly safe. Always verify money decisions through official channels.</p></details>
+  <details><summary>Do you store what I paste?</summary><p>No. The checker runs 100% in your browser; nothing you paste is uploaded, logged or stored. The free daily counter lives only on your own device.</p></details>
+  <details><summary>I already sent money. What now?</summary><p>Act fast: contact your bank or exchange immediately and report the fraud — speed matters for any chance of a freeze. Report the message to your local police or national fraud line, and warn the group or person who sent it to you. Do not pay any "recovery agent" who contacts you afterwards — recovery scams target victims twice.</p></details>
+  <details><summary>Why is this free?</summary><p>Because the moment of doubt is exactly when help should cost nothing. Pro exists for people who check offers every day and want no limits.</p></details>
+
+  <div class="disc"><b>Honest limits:</b> ScamOrNot is an educational pattern-checking tool, not a financial, legal or security authority, and not a substitute for your bank, your exchange, or law enforcement. Scammers change tactics constantly; a message can be dangerous without matching a known pattern. If money is involved and anything feels wrong, pause and verify independently — that pause is the real protection.</div>
+
+  <footer>
+    ScamOrNot — built in Dubai by <b>NenzyBrown</b>, founder of ProofReceipt (<a href="https://proofreceipt.netlify.app">proofreceipt.netlify.app</a>).<br>
+    Born from forensic casework exposing scam wallet files sold to hopeful buyers. If it feels off, check it first.
+  </footer>
+</div>
+<script src="engine.js"></script>
+<script>
+(function(){
+  var mode='message';
+  var input=document.getElementById('input'), go=document.getElementById('go');
+  var result=document.getElementById('result');
+  var PLACEHOLDERS={
+    message:'Paste the suspicious message here — a WhatsApp chat, email, SMS, job offer, investment pitch, anything. The more of it you paste, the better the check.',
+    link:'Paste the full link here — e.g. the address from a message, email or ad.',
+    address:'Paste the wallet address here — the one you were asked to send money to.'
+  };
+  var EXAMPLES={
+    pig:{mode:'message',text:"Hi dear, I think I messaged the wrong person but you seem kind 😊 I am Sophia. My uncle works at a crypto exchange and his trading mentor taught me a platform where I made $4,200 last week. Join me on this trading platform, I will guide you step by step. Don't tell anyone yet, keep this between us. We can move to Telegram to continue."},
+    fee:{mode:'message',text:"CONGRATULATIONS! You have won $50,000 in the Global Mobile Lottery. Your number was selected as a winner. To claim your prize, pay a processing fee of $45 via gift cards and send the codes here within 24 hours or your winnings expire. Act now!"},
+    parcel:{mode:'message',text:"Aramex: Your parcel is held at customs. Pay a redelivery fee of AED 12.40 here to release your package: http://aramex-redelivery.top/pay?track=88412 — your package will be returned within 48 hours if you don't."},
+    phish:{mode:'link',text:"https://www.paypal-secure-verify.xyz/login?session=confirm-account-now"},
+    normal:{mode:'message',text:"Hi team, the Q3 report is ready in the shared drive. Finance reviewed the numbers yesterday and everything matches the forecast. Let's discuss it in Thursday's standup — no action needed before then. Thanks, Lena"}
+  };
+  var SUBS={
+    scam:'Multiple heavy fraud patterns stack up here. Do not send money, codes, or personal documents — and do not reply. If you already paid, contact your bank or exchange right now.',
+    high:'Serious warning signs. Treat this as hostile until you have verified it through a channel you found yourself — the official app, the number on your card, the company\'s real website.',
+    suspicious:'Not conclusive, but there is enough here to slow down. Verify the sender and the request independently before doing anything it asks.',
+    low:'Nothing in what you pasted matches the heavy fraud patterns. That is reassurance, not a guarantee — for anything involving money, one independent check is still cheap insurance.'
+  };
+  document.querySelectorAll('.tab').forEach(function(t){
+    t.addEventListener('click',function(){
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.remove('on')});
+      t.classList.add('on'); mode=t.dataset.mode; input.placeholder=PLACEHOLDERS[mode];
+    });
+  });
+  document.querySelectorAll('.ex').forEach(function(b){
+    b.addEventListener('click',function(){
+      var ex=EXAMPLES[b.dataset.ex];
+      document.querySelectorAll('.tab').forEach(function(x){x.classList.toggle('on',x.dataset.mode===ex.mode)});
+      mode=ex.mode; input.value=ex.text; run();
+    });
+  });
+  function todayKey(){return 'son_day_'+new Date().toISOString().slice(0,10);}
+  function isPro(){return localStorage.getItem('son_pro')==='1';}
+  function usedToday(){return parseInt(localStorage.getItem(todayKey())||'0',10);}
+  function refreshLimit(){
+    var note=document.getElementById('limitNote'), row=document.getElementById('unlockRow');
+    if(isPro()){note.style.display='block';note.textContent='✓ Pro active — unlimited checks on this device.';row.style.display='none';return;}
+    var left=Math.max(0,3-usedToday());
+    note.style.display='block';
+    note.textContent=left>0?('Free checks left today: '+left+' of 3. Pro removes the limit.'):'You have used today\'s 3 free checks. Enter a Pro code below, or come back tomorrow.';
+    if(left===0) row.style.display='flex';
+  }
+  document.getElementById('unlockBtn').addEventListener('click',function(){
+    var code=document.getElementById('proCode').value.trim();
+    if(/^SON-PRO-[A-Z0-9]{4,}$/i.test(code)){localStorage.setItem('son_pro','1');alert('Pro unlocked on this device. Thank you for supporting ScamOrNot.');}
+    else alert('That code format is not recognised. Your code looks like SON-PRO-XXXX and arrives after your USDC payment is confirmed.');
+    refreshLimit();
+  });
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  var lastResult=null;
+  function run(){
+    var val=input.value.trim();
+    if(!val){alert('Paste something first — a message, a link, or an address.');return;}
+    if(!isPro()&&usedToday()>=3){refreshLimit();document.getElementById('unlockRow').style.display='flex';return;}
+    var r = mode==='message'?ScamEngine.analyzeText(val):mode==='link'?ScamEngine.analyzeUrl(val):ScamEngine.analyzeAddress(val);
+    lastResult=r;
+    if(!isPro()){localStorage.setItem(todayKey(),String(usedToday()+1));}
+    document.getElementById('scoreNum').textContent=r.score;
+    var dial=document.getElementById('dial');
+    dial.style.background='conic-gradient('+r.color+' '+(r.score*3.6)+'deg,#0d1017 0deg)';
+    dial.style.color='#fff';
+    document.getElementById('scoreNum').style.background='#0d1017';
+    document.getElementById('verdictLabel').textContent=r.verdict;
+    document.getElementById('verdictLabel').style.color=r.color;
+    document.getElementById('verdictSub').textContent=SUBS[r.band];
+    var fh=document.getElementById('flags'); fh.innerHTML='';
+    r.flags.forEach(function(f){
+      var d=document.createElement('div');
+      d.className='flag'+(f.weight>=25?' red':(f.weight===0?' info':''));
+      d.innerHTML='<b>'+esc(f.label)+'</b>'+(f.weight?'<span class="w">+'+f.weight+' risk</span>':'')+'<p>'+esc(f.why)+'</p>'+(f.excerpt?'<div class="ex2">“'+esc(f.excerpt)+'”</div>':'');
+      fh.appendChild(d);
+    });
+    if(!r.flags.length){fh.innerHTML='<div class="flag info"><b>No red-flag patterns matched</b><p>The checker found nothing from its fraud-pattern library in what you pasted.</p></div>';}
+    var aw=document.getElementById('adviceWrap'), al=document.getElementById('advice');
+    al.innerHTML=''; r.advice.slice(0,5).forEach(function(a){var li=document.createElement('li');li.textContent=a;al.appendChild(li);});
+    aw.style.display=r.advice.length?'block':'none';
+    var sw=document.getElementById('safeWrap'), sl=document.getElementById('safe');
+    sl.innerHTML=''; r.safeSigns.forEach(function(s){var li=document.createElement('li');li.textContent='✓ '+s;sl.appendChild(li);});
+    sw.style.display=r.safeSigns.length?'block':'none';
+    result.style.display='block';
+    result.scrollIntoView({behavior:'smooth',block:'nearest'});
+    refreshLimit();
+  }
+  go.addEventListener('click',run);
+  document.getElementById('againBtn').addEventListener('click',function(){input.value='';result.style.display='none';input.focus();window.scrollTo({top:0,behavior:'smooth'});});
+  document.getElementById('copyBtn').addEventListener('click',function(){
+    if(!lastResult)return;
+    var lines=['ScamOrNot check — Risk '+lastResult.score+'/100: '+lastResult.verdict];
+    lastResult.flags.forEach(function(f){lines.push('• '+f.label);});
+    lines.push('Checked at scamornot — paste anything suspicious before you pay, send, or click.');
+    navigator.clipboard.writeText(lines.join('\n')).then(function(){alert('Result summary copied.');});
+  });
+  refreshLimit();
+})();
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareApplication","name":"ScamOrNot","applicationCategory":"SecurityApplication","operatingSystem":"Web","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Instant pattern-based scam checker for messages, links and wallet addresses. Plain-English red flags in seconds, running entirely in the browser."}
+</script>
+</body>
+</html>
